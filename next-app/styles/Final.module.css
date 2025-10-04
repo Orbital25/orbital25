@@ -1,0 +1,166 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #0a0f1c 0%, #1a2332 100%);
+  color: white;
+  position: relative;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.finalContainer {
+  max-width: 800px;
+  width: 100%;
+  text-align: center;
+}
+
+.title {
+  font-size: 3rem;
+  margin-bottom: 3rem;
+  background: linear-gradient(45deg, #4A90E2, #00ff88);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.quoteSection {
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.quoteIcon {
+  font-size: 4rem;
+  color: #4A90E2;
+  opacity: 0.3;
+  margin-bottom: -1.5rem;
+}
+
+.quote {
+  font-size: 1.5rem;
+  font-style: italic;
+  line-height: 1.6;
+  color: #b8c5d6;
+  margin-bottom: 1rem;
+}
+
+.citation {
+  font-size: 1.1rem;
+  color: #4A90E2;
+  font-style: normal;
+}
+
+.ctaSection h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #00ff88;
+}
+
+.ctaButtons {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+}
+
+.learnMoreButton, .replayButton {
+  display: inline-block;
+  padding: 1rem 2rem;
+  text-decoration: none;
+  border-radius: 50px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  min-width: 200px;
+}
+
+.learnMoreButton {
+  background: linear-gradient(45deg, #ff6600, #ffaa00);
+  color: white;
+  box-shadow: 0 4px 15px rgba(255, 102, 0, 0.3);
+}
+
+.replayButton {
+  background: linear-gradient(45deg, #0066cc, #00aa44);
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 102, 204, 0.3);
+}
+
+.learnMoreButton:hover, .replayButton:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 102, 204, 0.4);
+}
+
+.statsSection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.statCard {
+  background: rgba(26, 35, 50, 0.5);
+  border: 1px solid #2a3441;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.statValue {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #00ff88;
+  margin-bottom: 0.5rem;
+}
+
+.statLabel {
+  font-size: 0.9rem;
+  color: #b8c5d6;
+}
+
+.footer {
+  background: rgba(26, 35, 50, 0.7);
+  border-top: 1px solid #2a3441;
+  padding: 1.5rem;
+  text-align: center;
+  color: #b8c5d6;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2.5rem;
+  }
+  
+  .quote {
+    font-size: 1.2rem;
+  }
+  
+  .ctaButtons {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .learnMoreButton, .replayButton {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .statsSection {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .statsSection {
+    grid-template-columns: 1fr;
+  }
+}
