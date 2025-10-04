@@ -1,0 +1,169 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #0a0f1c 0%, #1a2332 100%);
+  color: white;
+  position: relative;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.nblContainer {
+  max-width: 1200px;
+  width: 100%;
+  text-align: center;
+}
+
+.title {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  background: linear-gradient(45deg, #4A90E2, #00ff88);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gameSection {
+  margin-bottom: 3rem;
+}
+
+.gameSection h2 {
+  font-size: 1.5rem;
+  color: #4A90E2;
+  margin-bottom: 1rem;
+}
+
+.gameContainer {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.toolsSection {
+  margin-bottom: 2rem;
+}
+
+.toolsSection h2 {
+  font-size: 1.5rem;
+  color: #4A90E2;
+  margin-bottom: 1rem;
+}
+
+.toolsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.toolCard {
+  background: rgba(26, 35, 50, 0.5);
+  border: 1px solid #2a3441;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.toolCard:hover, .toolCard.selected {
+  background: rgba(26, 35, 50, 0.8);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.toolIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.toolCard h3 {
+  color: #ff6600;
+  margin: 0.5rem 0;
+}
+
+.toolCard p {
+  color: #b8c5d6;
+  font-size: 0.9rem;
+}
+
+.infoPanel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(26, 35, 50, 0.95);
+  border: 1px solid #2a3441;
+  border-radius: 12px;
+  padding: 1.5rem;
+  max-width: 400px;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.infoPanel h3 {
+  color: #4A90E2;
+  margin-bottom: 0.5rem;
+}
+
+.infoPanel p {
+  margin-bottom: 0.5rem;
+  color: #b8c5d6;
+}
+
+.infoPanel .benefit {
+  color: #00ff88;
+  font-style: italic;
+}
+
+.infoPanel button {
+  background: #0066cc;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.navButton {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(45deg, #0066cc, #00aa44);
+  color: white;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.navButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 102, 204, 0.3);
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+  
+  .controls {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+  }
+}

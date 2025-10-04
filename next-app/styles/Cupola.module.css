@@ -1,0 +1,195 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #0a0f1c 0%, #1a2332 100%);
+  color: white;
+  position: relative;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.cupolaContainer {
+  max-width: 1200px;
+  width: 100%;
+  text-align: center;
+}
+
+.title {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  background: linear-gradient(45deg, #4A90E2, #00ff88);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.mapSection {
+  margin-bottom: 2rem;
+}
+
+.mapSection h2 {
+  font-size: 1.5rem;
+  color: #4A90E2;
+  margin-bottom: 1rem;
+}
+
+.mapContainer {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.cupolaWindow {
+  width: 800px;
+  height: 600px;
+  margin: 2rem auto;
+  border-radius: 50%;
+  background: #000;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 
+    0 0 40px rgba(0, 102, 204, 0.5),
+    inset 0 0 60px rgba(0, 0, 0, 0.8);
+  border: 8px solid #333;
+}
+
+.earthView {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.earthImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.loading {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: #b8c5d6;
+}
+
+.hotspot {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+.hotspotIndicator {
+  width: 100%;
+  height: 100%;
+  background: #ff6600;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+  box-shadow: 0 0 10px #ff6600;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.infoCard {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(26, 35, 50, 0.95);
+  border: 1px solid #2a3441;
+  border-radius: 12px;
+  padding: 1.5rem;
+  max-width: 400px;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.infoCard h3 {
+  color: #4A90E2;
+  margin-bottom: 0.5rem;
+}
+
+.infoCard p {
+  margin-bottom: 1rem;
+  color: #b8c5d6;
+}
+
+.infoCard button {
+  background: #0066cc;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.navButton {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(45deg, #0066cc, #00aa44);
+  color: white;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.navButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 102, 204, 0.3);
+}
+
+@media (max-width: 900px) {
+  .cupolaWindow {
+    width: 600px;
+    height: 450px;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 700px) {
+  .cupolaWindow {
+    width: 90vw;
+    height: 67.5vw;
+    max-height: 400px;
+  }
+  
+  .title {
+    font-size: 1.8rem;
+  }
+  
+  .controls {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+  }
+  
+  .mapContainer {
+    max-width: 100%;
+  }
+}
