@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  orbitra:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - NASA_API_KEY=${NASA_API_KEY:-DEMO_KEY}
+      - ISS_API_URL=http://api.open-notify.org/iss-now.json
+      - CACHE_TIMEOUT=300
+      - REQUEST_TIMEOUT=10
+    volumes:
+      - ./data:/app/data:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - orbitra-network
+
+  # Optional: Add nginx reverse proxy for production
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - orbitra
+    restart: unless-stopped
+    networks:
+      - orbitra-network
+    profiles:
+      - production
+
+networks:
+  orbitra-network:
+    driver: bridge
