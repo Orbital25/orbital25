@@ -49,9 +49,29 @@ pids
 dist/
 build/
 tmp/
+orbitra
+
+# Go cache and modules
+.cache/
+go.sum
+vendor/
 
 # Node modules (if using any frontend build tools)
 node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Next.js build artifacts
+.next/
+out/
+.vercel/
+
+# Frontend build artifacts
+dist/
+build/
+.cache/
+.parcel-cache/
 
 # Coverage reports
 coverage/
