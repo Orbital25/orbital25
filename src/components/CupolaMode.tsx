@@ -54,25 +54,20 @@ export function CupolaMode({ onBack }: CupolaModeProps) {
 
   // Effect to animate the EPIC images for a spinning Earth effect
   useEffect(() => {
-    if (view === 'epic' && epicImages.length > 0) {
-      setIsFading(false); // Reset on view change
-      setPrimaryImageIndex(currentEpicIndex);
-
+    if (epicImages.length > 0) {
       const epicInterval = setInterval(() => {
-        setCurrentEpicIndex((prevIndex) => {
-          const nextIndex = (prevIndex + 1) % epicImages.length;
-          setIsFading(true);
-          setTimeout(() => {
-            setPrimaryImageIndex(nextIndex);
-            setIsFading(false);
-          }, 1000); // Corresponds to transition duration
-          return nextIndex;
-        });
+        const nextIndex = (currentEpicIndex + 1) % epicImages.length;
+        setIsFading(true);
+        setCurrentEpicIndex(nextIndex);
+        setTimeout(() => {
+          setPrimaryImageIndex(nextIndex);
+          setIsFading(false);
+        }, 1000); // Corresponds to transition duration
       }, 2000); // Change image every 2 seconds
 
       return () => clearInterval(epicInterval);
     }
-  }, [view, epicImages, currentEpicIndex]);
+  }, [epicImages, currentEpicIndex]);
 
   const loadAPOD = async () => {
     setLoading(true);
@@ -271,7 +266,7 @@ export function CupolaMode({ onBack }: CupolaModeProps) {
 
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="relative">
-          <div className="w-96 h-96 rounded-full border-8 border-white/20 backdrop-blur-sm relative overflow-hidden shadow-2xl">
+          <div className="w-[28rem] h-[28rem] md:w-[32rem] md:h-[32rem] rounded-full border-8 border-white/20 backdrop-blur-sm relative overflow-hidden shadow-2xl">
             {initialEpicLoad ? (
               <div className="w-full h-full bg-blue-900/50 flex items-center justify-center">
                 <Globe className="w-24 h-24 text-white/30 animate-pulse" />
@@ -281,12 +276,12 @@ export function CupolaMode({ onBack }: CupolaModeProps) {
                 <img
                   src={nasaAPI.getEPICImageUrl(epicImages[primaryImageIndex])}
                   alt="Earth from EPIC"
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${isFading ? 'opacity-0' : 'opacity-100'}`}
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 transform scale-125 ${isFading ? 'opacity-0' : 'opacity-100'}`}
                 />
                 <img
                   src={nasaAPI.getEPICImageUrl(epicImages[currentEpicIndex])}
                   alt="Earth from EPIC"
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${isFading ? 'opacity-100' : 'opacity-0'}`}
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 transform scale-125 ${isFading ? 'opacity-100' : 'opacity-0'}`}
                 />
                 <div className="absolute inset-0 rounded-full shadow-[inset_0_0_50px_10px_rgba(0,0,0,0.5)]"></div>
               </>
