@@ -26,12 +26,30 @@ export function CupolaMode({ onBack }: CupolaModeProps) {
   const [isFading, setIsFading] = useState(false);
   const [sunsetPhase, setSunsetPhase] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [initialEpicLoad, setInitialEpicLoad] = useState(true);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setSunsetPhase((prev) => (prev + 1) % 8);
     }, 10000);
     return () => clearInterval(interval);
+  }, []);
+
+  // Fetch EPIC images on initial component mount
+  useEffect(() => {
+    (async () => {
+      if (!epicCache) {
+        setInitialEpicLoad(true);
+        const data = await nasaAPI.getEPIC();
+        const slicedData = data.slice(0, 10);
+        epicCache = slicedData;
+        setEpicImages(slicedData);
+        setInitialEpicLoad(false);
+      } else {
+        setEpicImages(epicCache);
+        setInitialEpicLoad(false);
+      }
+    })();
   }, []);
 
   // Effect to animate the EPIC images for a spinning Earth effect
@@ -70,22 +88,7 @@ export function CupolaMode({ onBack }: CupolaModeProps) {
   };
 
   const loadEPIC = async () => {
-    setLoading(true);
-    try {
-      if (epicCache) {
-        setEpicImages(epicCache);
-      } else {
-        const data = await nasaAPI.getEPIC();
-        const slicedData = data.slice(0, 10);
-        epicCache = slicedData;
-        setEpicImages(slicedData);
-      }
-      setView('epic');
-    } catch (error) {
-      console.error('Error loading EPIC:', error);
-    } finally {
-      setLoading(false);
-    }
+    setView('epic');
   };
 
   const loadEONET = async () => {
@@ -268,23 +271,26 @@ export function CupolaMode({ onBack }: CupolaModeProps) {
 
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="relative">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent rounded-full blur-3xl"></div>
           <div className="w-96 h-96 rounded-full border-8 border-white/20 backdrop-blur-sm relative overflow-hidden shadow-2xl">
-            <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/20 to-blue-900/40"></div>
-
-            <div className="absolute inset-0 flex items-center justify-center">
-              <Globe className="w-32 h-32 text-white/30 animate-pulse" />
-            </div>
-
-            <div className="absolute bottom-4 left-4 right-4">
-              <div className="bg-black/50 backdrop-blur-md rounded-lg p-3 border border-white/20">
-                <div className="flex items-center gap-2 text-white text-sm mb-2">
-                  <Sunrise className="w-4 h-4 text-yellow-400" />
-                  <span>ISS Sunrise/Sunset Cycle {sunsetPhase + 1}/16</span>
-                </div>
-                <p className="text-xs text-blue-200">The ISS experiences 16 sunrises and sunsets every 24 hours</p>
+            {initialEpicLoad ? (
+              <div className="w-full h-full bg-blue-900/50 flex items-center justify-center">
+                <Globe className="w-24 h-24 text-white/30 animate-pulse" />
               </div>
-            </div>
+            ) : (
+              <>
+                <img
+                  src={nasaAPI.getEPICImageUrl(epicImages[primaryImageIndex])}
+                  alt="Earth from EPIC"
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${isFading ? 'opacity-0' : 'opacity-100'}`}
+                />
+                <img
+                  src={nasaAPI.getEPICImageUrl(epicImages[currentEpicIndex])}
+                  alt="Earth from EPIC"
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${isFading ? 'opacity-100' : 'opacity-0'}`}
+                />
+                <div className="absolute inset-0 rounded-full shadow-[inset_0_0_50px_10px_rgba(0,0,0,0.5)]"></div>
+              </>
+            )}
           </div>
         </div>
       </div>
