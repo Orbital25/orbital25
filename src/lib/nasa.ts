@@ -1,0 +1,84 @@
+const NASA_API_KEY = '9habhcIIQofd2V9FJOERni6w8mtj5YtCOfcwUSpV';
+
+export const nasaAPI = {
+  async getAPOD() {
+    const response = await fetch(
+      `https://api.nasa.gov/planetary/apod?api_key=${NASA_API_KEY}`
+    );
+    return response.json();
+  },
+
+  async getNeoWs(startDate?: string, endDate?: string) {
+    const start = startDate || new Date().toISOString().split('T')[0];
+    const end = endDate || start;
+    const response = await fetch(
+      `https://api.nasa.gov/neo/rest/v1/feed?start_date=${start}&end_date=${end}&api_key=${NASA_API_KEY}`
+    );
+    return response.json();
+  },
+
+  async getEONET() {
+    const response = await fetch(
+      `https://eonet.gsfc.nasa.gov/api/v3/events?api_key=${NASA_API_KEY}`
+    );
+    return response.json();
+  },
+
+  async getDONKI(startDate?: string, endDate?: string) {
+    const start = startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    const end = endDate || new Date().toISOString().split('T')[0];
+    const response = await fetch(
+      `https://api.nasa.gov/DONKI/notifications?startDate=${start}&endDate=${end}&type=all&api_key=${NASA_API_KEY}`
+    );
+    return response.json();
+  },
+
+  async getEPIC() {
+    const response = await fetch(
+      `https://api.nasa.gov/EPIC/api/natural?api_key=${NASA_API_KEY}`
+    );
+    const data = await response.json();
+    return data;
+  },
+
+  getEPICImageUrl(image: any) {
+    const date = image.date.split(' ')[0].replace(/-/g, '/');
+    return `https://api.nasa.gov/EPIC/archive/natural/${date}/png/${image.image}.png?api_key=${NASA_API_KEY}`;
+  },
+
+  async getMarsRoverPhotos(rover = 'curiosity', sol = 1000) {
+    const response = await fetch(
+      `https://api.nasa.gov/mars-photos/api/v1/rovers/${rover}/photos?sol=${sol}&api_key=${NASA_API_KEY}`
+    );
+    return response.json();
+  },
+
+  async getExoplanets(limit = 10) {
+    const response = await fetch(
+      `https://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=exoplanets&select=pl_name,pl_masse,pl_rade,st_dist&format=json&order=pl_name`
+    );
+    const data = await response.json();
+    return data.slice(0, limit);
+  },
+
+  async getTechport(projectId?: number) {
+    if (projectId) {
+      const response = await fetch(
+        `https://api.nasa.gov/techport/api/projects/${projectId}?api_key=${NASA_API_KEY}`
+      );
+      return response.json();
+    }
+    const response = await fetch(
+      `https://api.nasa.gov/techport/api/projects?api_key=${NASA_API_KEY}`
+    );
+    return response.json();
+  },
+
+  async getTechTransfer(query = '') {
+    const searchQuery = query || 'space';
+    const response = await fetch(
+      `https://api.nasa.gov/techtransfer/patent/?${searchQuery}&api_key=${NASA_API_KEY}`
+    );
+    return response.json();
+  }
+};
