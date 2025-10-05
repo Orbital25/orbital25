@@ -34,16 +34,19 @@ export const nasaAPI = {
   },
 
   async getEPIC() {
-    const response = await fetch(
-      `https://api.nasa.gov/EPIC/api/natural?api_key=${NASA_API_KEY}`
-    );
+    // The api.nasa.gov endpoint for EPIC is often unavailable.
+    // Using the direct GSFC endpoint is more reliable.
+    const response = await fetch('https://epic.gsfc.nasa.gov/api/natural');
+    if (!response.ok) {
+      throw new Error(`Failed to fetch EPIC data: ${response.statusText}`);
+    }
     const data = await response.json();
     return data;
   },
 
   getEPICImageUrl(image: any) {
     const date = image.date.split(' ')[0].replace(/-/g, '/');
-    return `https://api.nasa.gov/EPIC/archive/natural/${date}/png/${image.image}.png?api_key=${NASA_API_KEY}`;
+    return `https://epic.gsfc.nasa.gov/archive/natural/${date}/png/${image.image}.png`;
   },
 
   async getMarsRoverPhotos(rover = 'curiosity', sol = 1000) {
