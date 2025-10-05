@@ -120,10 +120,11 @@ export function CupolaMode({ onBack }: CupolaModeProps) {
   };
 
   const getEventIcon = (category: string) => {
-    if (category.includes('Fire')) return '🔥';
-    if (category.includes('Storm')) return '⛈️';
-    if (category.includes('Volcano')) return '🌋';
-    if (category.includes('Flood')) return '🌊';
+    const lowerCategory = category.toLowerCase();
+    if (lowerCategory.includes('fire')) return '🔥';
+    if (lowerCategory.includes('storm')) return '⛈️';
+    if (lowerCategory.includes('volcano')) return '🌋';
+    if (lowerCategory.includes('flood')) return '🌊';
     return '⚠️';
   };
 
