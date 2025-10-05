@@ -1,6 +1,30 @@
 import { supabase } from './supabase';
 
-async function fetchFromProxy(endpoint: string, options?: any) {
+export interface Exoplanet {
+  disc_year: number;
+  pl_name: string;
+  hostname: string;
+  sy_dist?: number;
+  pl_rade?: number;
+  pl_masse?: number;
+}
+
+export interface APODData {
+  title: string;
+  explanation: string;
+  url: string;
+  hdurl?: string;
+  date: string;
+  media_type: string;
+}
+
+export interface EPICImage {
+  image: string;
+  date: string;
+  caption?: string;
+}
+
+async function fetchFromProxy(endpoint: string, options?: Record<string, unknown>) {
   const { data, error } = await supabase.functions.invoke('nasa-proxy', {
     body: { endpoint, options },
   });
@@ -35,7 +59,7 @@ export const nasaAPI = {
     return fetchFromProxy('epic');
   },
 
-  getEPICImageUrl(image: any) {
+  getEPICImageUrl(image: EPICImage) {
     const date = image.date.split(' ')[0].replace(/-/g, '/');
     return `https://epic.gsfc.nasa.gov/archive/natural/${date}/png/${image.image}.png`;
   },
@@ -45,7 +69,7 @@ export const nasaAPI = {
   },
 
   async getExoplanets(limit = 10) {
-    const data = await fetchFromProxy('exoplanet');
+    const data: Exoplanet[] = await fetchFromProxy('exoplanet');
     return data.filter(p => p.disc_year).sort((a, b) => b.disc_year - a.disc_year).slice(0, limit);
   },
 
@@ -57,3 +81,6 @@ export const nasaAPI = {
     return fetchFromProxy('techtransfer');
   }
 };
+
+  
+

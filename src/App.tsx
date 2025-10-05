@@ -6,16 +6,17 @@ import { CupolaMode } from './components/CupolaMode';
 import { NBLMode } from './components/NBLMode';
 import { MissionViewer } from './components/MissionViewer';
 import { Leaderboard } from './components/Leaderboard';
+import { ProfileEditor } from './components/ProfileEditor';
 import { Mission } from './lib/supabase';
 
-type View = 'dashboard' | 'cupola' | 'nbl' | 'mission' | 'leaderboard';
+type View = 'dashboard' | 'cupola' | 'nbl' | 'mission' | 'leaderboard' | 'profile';
 
 function AppContent() {
   const { user, loading } = useAuth();
   const [currentView, setCurrentView] = useState<View>('dashboard');
   const [selectedMission, setSelectedMission] = useState<Mission | null>(null);
 
-  const handleViewChange = (view: View, data?: any) => {
+  const handleViewChange = (view: View, data?: Mission) => {
     setCurrentView(view);
     if (view === 'mission' && data) {
       setSelectedMission(data);
@@ -58,6 +59,9 @@ function AppContent() {
 
     case 'leaderboard':
       return <Leaderboard onBack={handleBackToDashboard} />;
+
+    case 'profile':
+      return <ProfileEditor onBack={handleBackToDashboard} />;
 
     default:
       return <Dashboard onViewChange={handleViewChange} />;
