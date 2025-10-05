@@ -10,8 +10,9 @@ Orbitra is an interactive web platform celebrating 25 years of the International
 *[Demo to be uploaded - 30-second walkthrough of live application showing ISS tracking, map interaction, and different sections]*
 
 ## Link to Final Project
-**GitHub Repository:** https://github.com/[your-username]/orbital25
-**Live Demo:** [Deploy to Vercel/Netlify and provide URL]
+**GitHub Repository:** https://github.com/Orbital25/orbital25.git
+
+**Live Demo:** [https://orbital25-rho.vercel.app/]
 
 ## Detailed Project Description
 
@@ -22,9 +23,10 @@ Orbitra is an interactive web platform celebrating 25 years of the International
 - **Educational Dashboard:** Statistics and information about the ISS's 25-year mission
 
 ### How it works:
-- **Backend:** Go-based REST API server providing ISS position data, NASA imagery integration, and game simulation endpoints
-- **Frontend:** Next.js application with responsive design, real-time updates via WebSocket connections
-- **Data Integration:** Fetches live ISS coordinates, integrates NASA Earth imagery, and provides interactive visualizations
+- **Frontend:** React 18 with TypeScript application built with Vite, featuring responsive design and real-time updates
+- **Backend:** Supabase provides authentication, PostgreSQL database, and storage services
+- **Data Integration:** Fetches live ISS coordinates from NASA Open Notify API, integrates NASA Earth imagery, and provides interactive visualizations
+- **Real-time Updates:** Periodic API polling for live ISS position and orbital data
 
 ### Benefits:
 - Makes space exploration accessible to the public
@@ -33,11 +35,12 @@ Orbitra is an interactive web platform celebrating 25 years of the International
 - Inspires interest in space careers and research
 
 ### Tools & Technologies:
-- **Backend:** Go, WebSocket, REST APIs
-- **Frontend:** Next.js, React, JavaScript, CSS
-- **Mapping:** Leaflet.js for interactive maps
-- **Game Engine:** Phaser.js for NBL simulation
-- **Deployment:** Docker containerization
+- **Frontend:** React 18, TypeScript, Vite 5.4
+- **Styling:** Tailwind CSS
+- **Backend:** Supabase (PostgreSQL, Auth, Storage)
+- **UI Components:** Lucide React icons
+- **APIs:** NASA Open Data integration
+- **Build Tool:** Vite for fast development and building
 - **Version Control:** Git with structured commit history
 
 ## NASA Data
@@ -101,38 +104,56 @@ All AI-assisted code includes comments indicating AI tool usage and has been tho
 
 ## Technical Architecture
 
-### Backend (Go)
+### Frontend (React + TypeScript)
 ```
-cmd/main.go              - Server entry point
-internal/
-├── handlers/            - API endpoint handlers
-├── services/            - Business logic
-├── models/              - Data structures
-├── middleware/          - CORS, logging
-└── websocket/           - Real-time updates
+src/
+├── components/          - React components
+│   ├── Auth.tsx         - Authentication component
+│   ├── CupolaMode.tsx   - ISS Cupola view
+│   ├── Dashboard.tsx    - Main dashboard
+│   ├── NBLMode.tsx      - NBL training simulator
+│   └── ...
+├── contexts/            - React contexts
+├── lib/                 - Utility libraries
+│   ├── nasa.ts          - NASA API integration
+│   └── supabase.ts      - Supabase client
+└── App.tsx              - Main app component
 ```
 
-### Frontend (Next.js)
+### Backend (Supabase)
 ```
-next-app/
-├── pages/               - Application routes
-├── components/          - Reusable UI components
-├── styles/              - CSS modules
-└── utils/               - Helper functions
+supabase/
+└── migrations/          - Database migrations
 ```
+
+### Build & Configuration
+```
+├── index.html           - Entry HTML file
+├── package.json         - Dependencies
+├── vite.config.ts       - Vite configuration
+└── tailwind.config.js   - Tailwind CSS config
+```
+
+### Tech Stack:
+- **Frontend:** React 18 with TypeScript
+- **Build Tool:** Vite 5.4
+- **Styling:** Tailwind CSS
+- **Backend:** Supabase (PostgreSQL, Auth, Storage)
+- **UI Icons:** Lucide React
+- **APIs:** NASA Open Data integration
 
 ### Key Features Implementation:
 1. **ISS Tracking:** Real-time position updates with orbital visualization
-2. **Interactive Map:** Leaflet.js integration with custom ISS markers
-3. **Cupola View:** NASA imagery correlation with ISS position
-4. **NBL Simulator:** Phaser.js game engine for training simulation
-5. **Responsive Design:** Mobile-first approach with space-themed UI
+2. **Interactive Map:** Live ISS position and orbital path visualization
+3. **Cupola View:** Earth observation from astronaut's perspective using NASA imagery
+4. **NBL Simulator:** Interactive Neutral Buoyancy Laboratory spacewalk training
+5. **Responsive Design:** Optimized for desktop, tablet, and mobile devices
 
 ### Data Flow:
-1. Go backend fetches ISS data from NASA APIs
-2. WebSocket connections provide real-time updates
-3. Next.js frontend renders interactive components
-4. User interactions trigger API calls and state updates
-5. Educational content contextualizes the ISS experience
+1. React frontend fetches ISS data from NASA Open Notify API
+2. Supabase handles authentication and data storage
+3. Real-time updates via periodic API polling
+4. NASA imagery integration for Earth observation
+5. TypeScript ensures type safety across components
 
 This project successfully demonstrates the intersection of space technology, education, and web development while celebrating the remarkable 25-year journey of the International Space Station.
