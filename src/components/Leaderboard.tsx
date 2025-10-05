@@ -18,7 +18,7 @@ export function Leaderboard({ onBack }: LeaderboardProps) {
 
   const loadLeaderboard = async () => {
     setLoading(true);
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('profiles')
       .select('*')
       .order('points', { ascending: false })

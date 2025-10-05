@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import {
   Telescope, Satellite, Globe, Sun, Camera, Rocket,
-  Lightbulb, FileText, Mountain, Trophy, Flame, LogOut,
+  Lightbulb, Mountain, Trophy, Flame, LogOut,
   User, ChevronRight, Star, Droplets
 } from 'lucide-react';
 import { supabase, Mission, Badge, UserBadge } from '../lib/supabase';
@@ -10,7 +10,7 @@ import { supabase, Mission, Badge, UserBadge } from '../lib/supabase';
 type View = 'dashboard' | 'cupola' | 'nbl' | 'mission' | 'leaderboard' | 'profile';
 
 type DashboardProps = {
-  onViewChange: (view: View, data?: any) => void;
+  onViewChange: (view: View, data?: Mission) => void;
 };
 
 export function Dashboard({ onViewChange }: DashboardProps) {
@@ -18,7 +18,7 @@ export function Dashboard({ onViewChange }: DashboardProps) {
   const [missions, setMissions] = useState<Mission[]>([]);
   const [badges, setBadges] = useState<Badge[]>([]);
   const [userBadges, setUserBadges] = useState<UserBadge[]>([]);
-  const [completedMissions, setCompletedMissions] = useState<Set<string>>(new Set());
+
 
   useEffect(() => {
     loadData();
@@ -27,23 +27,19 @@ export function Dashboard({ onViewChange }: DashboardProps) {
   const loadData = async () => {
     if (!profile) return;
 
-    const [missionsRes, badgesRes, userBadgesRes, completedRes] = await Promise.all([
+    const [missionsRes, badgesRes, userBadgesRes] = await Promise.all([
       supabase.from('missions').select('*'),
       supabase.from('badges').select('*'),
-      supabase.from('user_badges').select('*, badges(*)').eq('user_id', profile.id),
-      supabase.from('user_missions').select('mission_id').eq('user_id', profile.id)
+      supabase.from('user_badges').select('*, badges(*)').eq('user_id', profile.id)
     ]);
 
     if (missionsRes.data) setMissions(missionsRes.data);
     if (badgesRes.data) setBadges(badgesRes.data);
     if (userBadgesRes.data) setUserBadges(userBadgesRes.data);
-    if (completedRes.data) {
-      setCompletedMissions(new Set(completedRes.data.map(m => m.mission_id)));
-    }
   };
 
   const getMissionIcon = (missionKey: string) => {
-    const icons: Record<string, any> = {
+    const icons: Record<string, React.ComponentType<{ className?: string }>> = {
       apod: Telescope,
       neows: Mountain,
       eonet: Globe,
@@ -59,7 +55,7 @@ export function Dashboard({ onViewChange }: DashboardProps) {
   };
 
   const earnedBadgeKeys = new Set(
-    userBadges.map(ub => (ub.badges as any)?.mission_key).filter(Boolean)
+    userBadges.map(ub => ub.badges?.mission_key).filter(Boolean)
   );
 
   return (
@@ -82,7 +78,10 @@ export function Dashboard({ onViewChange }: DashboardProps) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+          <button
+            onClick={() => onViewChange('profile')}
+            className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 text-left hover:border-cyan-400 transition-all hover:scale-105 transform"
+          >
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 rounded-full flex items-center justify-center text-3xl" style={{ backgroundColor: profile?.avatar_suit_color }}>
                 <User className="w-8 h-8 text-white" />
@@ -92,7 +91,7 @@ export function Dashboard({ onViewChange }: DashboardProps) {
                 <p className="text-blue-200">Astronaut Trainee</p>
               </div>
             </div>
-          </div>
+          </button>
 
           <div className="bg-gradient-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-lg rounded-2xl p-6 border border-yellow-500/30">
             <div className="flex items-center justify-between">
