@@ -354,8 +354,8 @@ function renderMissionContent(missionKey: string, data: any) {
               <div className="flex items-start gap-3">
                 <div className="text-3xl">💡</div>
                 <div className="flex-1">
-                  <h3 className="text-lg font-bold text-white mb-2">{patent[2] || 'NASA Innovation'}</h3>
-                  <p className="text-blue-200 text-sm">{patent[3] || 'Patent and Technology Transfer'}</p>
+                  <h3 className="text-lg font-bold text-white mb-2">{(patent[2] || 'NASA Innovation').replace(/&lt;span class="highlight"&gt;Space&lt;\/span&gt;/g, 'Space').replace(/<[^>]*>/g, '')}</h3>
+                  <p className="text-blue-200 text-sm">{(patent[3] || 'Patent and Technology Transfer').replace(/&lt;span class="highlight"&gt;Space&lt;\/span&gt;/g, 'Space').replace(/<[^>]*>/g, '')}</p>
                 </div>
               </div>
             </div>
