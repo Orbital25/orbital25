@@ -3,6 +3,7 @@ import { ArrowLeft, Globe, Camera, AlertTriangle, Sun, Sunrise } from 'lucide-re
 import { nasaAPI } from '../lib/nasa';
 
 let epicCache: any[] | null = null;
+let eonetCache: EONETEvent[] | null = null;
 
 type CupolaModeProps = {
   onBack: () => void;
@@ -90,8 +91,14 @@ export function CupolaMode({ onBack }: CupolaModeProps) {
   const loadEONET = async () => {
     setLoading(true);
     try {
-      const data = await nasaAPI.getEONET();
-      setEonetEvents(data.events.slice(0, 20));
+      if (eonetCache) {
+        setEonetEvents(eonetCache);
+      } else {
+        const data = await nasaAPI.getEONET();
+        const events = data.events.slice(0, 20);
+        eonetCache = events;
+        setEonetEvents(events);
+      }
       setView('eonet');
     } catch (error) {
       console.error('Error loading EONET:', error);
