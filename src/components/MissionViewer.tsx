@@ -409,7 +409,12 @@ function DonkiMessageBody({ text }: { text: string }) {
         if (line.startsWith('http')) {
           if (line.endsWith('.gif')) {
             return (
-              <img key={index} src={line} alt="DONKI animation" className="rounded-lg my-2 border border-orange-500/30" />
+              <div key={index}>
+                <img src={line} alt="DONKI animation" className="rounded-lg mt-2 mb-1 border border-orange-500/30" />
+                <a href={line} target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline block truncate text-xs">
+                  {line}
+                </a>
+              </div>
             );
           }
           return (
