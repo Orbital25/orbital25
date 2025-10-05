@@ -58,15 +58,16 @@ export const nasaAPI = {
 
   async getExoplanets(limit = 10) {
     const response = await fetch(
-      `https://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=exoplanets&select=pl_name,pl_masse,pl_rade,st_dist&format=json&order=pl_name`
+      `https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,sy_snum,sy_pnum,discoverymethod,disc_year+from+pscomppars&format=json`
     );
     if (!response.ok) {
       const errorText = await response.text();
       console.error('Exoplanet API Error:', errorText);
       throw new Error('Failed to fetch Exoplanet data. The API may be temporarily unavailable.');
     }
-    const data = await response.json();
-    return data.slice(0, limit);
+    const data: any[] = await response.json();
+    // Filter out entries without a discovery year and sort by most recent
+    return data.filter(p => p.disc_year).sort((a, b) => b.disc_year - a.disc_year).slice(0, limit);
   },
 
   async getTechport(projectId?: number) {

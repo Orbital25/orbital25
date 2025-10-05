@@ -299,24 +299,24 @@ function renderMissionContent(missionKey: string, data: any) {
               <div className="flex items-start gap-4">
                 <div className="text-4xl">🪐</div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold text-white mb-3">{planet.pl_name}</h3>
+                  <h3 className="text-xl font-bold text-white mb-3">{planet.hostname} System</h3>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-blue-300">Mass</span>
+                      <span className="text-blue-300">Discovery Year</span>
                       <span className="text-white font-semibold">
-                        {planet.pl_masse ? `${planet.pl_masse.toFixed(2)} Earth masses` : 'Unknown'}
+                        {planet.disc_year || 'Unknown'}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-blue-300">Radius</span>
+                      <span className="text-blue-300">Stars in System</span>
                       <span className="text-white font-semibold">
-                        {planet.pl_rade ? `${planet.pl_rade.toFixed(2)} Earth radii` : 'Unknown'}
+                        {planet.sy_snum || 'Unknown'}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-blue-300">Distance</span>
+                      <span className="text-blue-300">Planets in System</span>
                       <span className="text-white font-semibold">
-                        {planet.st_dist ? `${planet.st_dist.toFixed(2)} parsecs` : 'Unknown'}
+                        {planet.sy_pnum || 'Unknown'}
                       </span>
                     </div>
                   </div>
