@@ -83,11 +83,14 @@ export const nasaAPI = {
     return response.json();
   },
 
-  async getTechTransfer(query = '') {
-    const searchQuery = query || 'space';
+  async getTechTransfer(query = 'space') {
     const response = await fetch(
-      `https://api.nasa.gov/techtransfer/patent/?${searchQuery}&api_key=${NASA_API_KEY}`
+      `https://api.nasa.gov/techtransfer/patent/?q=${query}&api_key=${NASA_API_KEY}`
     );
+    if (!response.ok) {
+      throw new Error(`Failed to fetch TechTransfer data: ${response.statusText}`);
+    }
     return response.json();
   }
+
 };
