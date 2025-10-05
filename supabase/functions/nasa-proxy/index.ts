@@ -19,7 +19,11 @@ const nasaEndpoints = {
   exoplanet: 'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,sy_snum,sy_pnum,discoverymethod,disc_year+from+pscomppars&format=json',
   mars: `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=${NASA_API_KEY}`,
   techport: `https://api.nasa.gov/techport/api/projects?api_key=${NASA_API_KEY}`,
-  techtransfer: `https://api.nasa.gov/techtransfer/patent/?q=space&api_key=${NASA_API_KEY}`,
+  techtransfer: {
+    patents: 'https://technology.nasa.gov/api/api/patent/',
+    software: 'https://technology.nasa.gov/api/api/software/',
+    spinoff: 'https://technology.nasa.gov/api/api/spinoff/'
+  },
 };
 
 type NasaEndpoint = keyof typeof nasaEndpoints;
@@ -30,23 +34,33 @@ serve(async (req: Request) => {
   }
 
   const { endpoint, options }: { endpoint: NasaEndpoint; options?: Record<string, unknown> } = await req.json();
-  const endpointUrl = nasaEndpoints[endpoint];
+  let endpointUrl = nasaEndpoints[endpoint];
+  let cacheKey = endpoint;
 
-  if (!endpointUrl) {
+  // Handle techtransfer sub-endpoints
+  if (endpoint === 'techtransfer') {
+    const techtransferEndpoints = nasaEndpoints.techtransfer as Record<string, string>;
+    const type = (options?.type as string) || 'patents';
+    const search = (options?.search as string) || 'space';
+    endpointUrl = techtransferEndpoints[type] + search;
+    cacheKey = `techtransfer_${type}_${search}`;
+  }
+
+  if (!endpointUrl || typeof endpointUrl !== 'string') {
     return new Response(JSON.stringify({ error: 'Invalid endpoint' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   }
 
   const supabaseClient = createClient(
     Deno.env.get('SUPABASE_URL') ?? '',
-    Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-    { global: { headers: { Authorization: req.headers.get('Authorization')! } } }
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+    { auth: { persistSession: false } }
   );
 
   // 1. Check for cached data
   const { data: cachedData } = await supabaseClient
     .from('api_cache')
     .select('data, cached_at')
-    .eq('endpoint', endpoint)
+    .eq('endpoint', cacheKey)
     .single();
 
   if (cachedData) {
@@ -58,11 +72,16 @@ serve(async (req: Request) => {
 
   // 3. Fetch new data from NASA
   try {
-    const response = await fetch(endpointUrl);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 7000);
+    
+    const response = await fetch(endpointUrl, { signal: controller.signal });
+    clearTimeout(timeoutId);
+    
     if (!response.ok) throw new Error(`NASA API request failed with status ${response.status}`);
     const newData = await response.json();
 
-    await supabaseClient.from('api_cache').upsert({ endpoint, data: newData, cached_at: new Date().toISOString() }, { onConflict: 'endpoint' });
+    await supabaseClient.from('api_cache').upsert({ endpoint: cacheKey, data: newData, cached_at: new Date().toISOString() }, { onConflict: 'endpoint' });
 
     return new Response(JSON.stringify(newData), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   } catch (error) {
