@@ -263,8 +263,8 @@ function renderMissionContent(missionKey: string, data: any) {
               <div className="flex items-start gap-4">
                 <div className="text-3xl">☀️</div>
                 <div className="flex-1">
-                  <h3 className="text-lg font-bold text-white mb-2">{notification.messageType}</h3>
-                  <p className="text-blue-200 text-sm">{notification.messageBody}</p>
+                  <h3 className="text-lg font-bold text-white mb-3">{notification.messageType}</h3>
+                  <DonkiMessageBody text={notification.messageBody} />
                   <p className="text-xs text-blue-300 mt-2">{notification.messageIssueTime}</p>
                 </div>
               </div>
@@ -390,4 +390,28 @@ function renderMissionContent(missionKey: string, data: any) {
         </div>
       );
   }
+}
+
+function DonkiMessageBody({ text }: { text: string }) {
+  const lines = text.split('\n').filter(line => line.trim() !== '');
+
+  return (
+    <div className="text-blue-200 text-sm space-y-2">
+      {lines.map((line, index) => {
+        if (line.startsWith('## ')) {
+          const headerText = line.replace('## ', '').trim();
+          if (!headerText) return null; // Don't render empty headers
+          return <h4 key={index} className="text-base font-bold text-white pt-2">{headerText}</h4>;
+        }
+        if (line.startsWith('http')) {
+          return (
+            <a key={index} href={line} target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline block truncate">
+              {line}
+            </a>
+          );
+        }
+        return <p key={index}>{line}</p>;
+      })}
+    </div>
+  );
 }
