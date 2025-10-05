@@ -21,6 +21,8 @@ export function CupolaMode({ onBack }: CupolaModeProps) {
   const [epicImages, setEpicImages] = useState<any[]>([]);
   const [eonetEvents, setEonetEvents] = useState<EONETEvent[]>([]);
   const [currentEpicIndex, setCurrentEpicIndex] = useState(0);
+  const [primaryImageIndex, setPrimaryImageIndex] = useState(0);
+  const [isFading, setIsFading] = useState(false);
   const [sunsetPhase, setSunsetPhase] = useState(0);
   const [loading, setLoading] = useState(false);
 
@@ -34,13 +36,24 @@ export function CupolaMode({ onBack }: CupolaModeProps) {
   // Effect to animate the EPIC images for a spinning Earth effect
   useEffect(() => {
     if (view === 'epic' && epicImages.length > 0) {
+      setIsFading(false); // Reset on view change
+      setPrimaryImageIndex(currentEpicIndex);
+
       const epicInterval = setInterval(() => {
-        setCurrentEpicIndex((prevIndex) => (prevIndex + 1) % epicImages.length);
+        setCurrentEpicIndex((prevIndex) => {
+          const nextIndex = (prevIndex + 1) % epicImages.length;
+          setIsFading(true);
+          setTimeout(() => {
+            setPrimaryImageIndex(nextIndex);
+            setIsFading(false);
+          }, 1000); // Corresponds to transition duration
+          return nextIndex;
+        });
       }, 2000); // Change image every 2 seconds
 
       return () => clearInterval(epicInterval);
     }
-  }, [view, epicImages]);
+  }, [view, epicImages, currentEpicIndex]);
 
   const loadAPOD = async () => {
     setLoading(true);
@@ -139,38 +152,55 @@ export function CupolaMode({ onBack }: CupolaModeProps) {
   }
 
   if (view === 'epic' && epicImages.length > 0) {
-    const currentImage = epicImages[currentEpicIndex];
+    const primaryImage = epicImages[primaryImageIndex];
+    const secondaryImage = epicImages[currentEpicIndex];
 
     return (
       <div className="min-h-screen bg-black relative">
         <button
           onClick={() => setView('main')}
-          className="absolute top-4 left-4 z-20 flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-lg text-white rounded-lg transition-all border border-white/30"
+          className="absolute top-4 left-4 z-30 flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-lg text-white rounded-lg transition-all border border-white/30"
         >
           <ArrowLeft className="w-5 h-5" />
           Back to Cupola
         </button>
 
-        <div className="min-h-screen flex flex-col items-center justify-center p-4">
-          <img
-            src={nasaAPI.getEPICImageUrl(currentImage)}
-            alt="Earth from EPIC"
-            key={currentImage.identifier}
-            className="max-w-3xl w-full rounded-full shadow-2xl mb-6 aspect-square object-cover animate-fade-in"
-          />
+        <div className="min-h-screen flex flex-col items-center justify-center p-4 relative">
+          <div className="relative max-w-3xl w-full rounded-full shadow-2xl mb-6 aspect-square">
+            {primaryImage && (
+              <img
+                src={nasaAPI.getEPICImageUrl(primaryImage)}
+                alt="Earth from EPIC"
+                className={`absolute inset-0 w-full h-full rounded-full object-cover transition-opacity duration-1000 ${isFading ? 'opacity-0' : 'opacity-100'}`}
+              />
+            )}
+            {secondaryImage && (
+              <img
+                src={nasaAPI.getEPICImageUrl(secondaryImage)}
+                alt="Earth from EPIC"
+                className={`absolute inset-0 w-full h-full rounded-full object-cover transition-opacity duration-1000 ${isFading ? 'opacity-100' : 'opacity-0'}`}
+              />
+            )}
+          </div>
+
           <div className="flex gap-2 mb-4">
             {epicImages.map((_, index) => (
               <button
                 key={index}
-                onClick={() => setCurrentEpicIndex(index)}
-                className={`w-3 h-3 rounded-full transition-all ${
-                  index === currentEpicIndex ? 'bg-cyan-400 w-8' : 'bg-white/30'
+                onClick={() => {
+                  if (index !== currentEpicIndex) {
+                    setCurrentEpicIndex(index);
+                    setPrimaryImageIndex(index);
+                  }
+                }}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  index === currentEpicIndex ? 'bg-cyan-400 w-8 animate-pulse-once' : 'bg-white/30'
                 }`}
               />
             ))}
           </div>
           <div className="bg-white/10 backdrop-blur-lg rounded-xl px-6 py-3 border border-white/20">
-            <p className="text-white font-semibold">{currentImage.date}</p>
+            <p className="text-white font-semibold">{secondaryImage.date}</p>
           </div>
         </div>
       </div>
