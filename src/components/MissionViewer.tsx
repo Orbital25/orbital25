@@ -100,11 +100,15 @@ export function MissionViewer({ mission, onBack }: MissionViewerProps) {
           .maybeSingle();
 
         if (badgeRes.data) {
-          await supabase.from('user_badges').insert({
-            user_id: profile.id,
-            badge_id: badgeRes.data.id,
-            earned_at: new Date().toISOString()
-          }).then(() => {}).catch(() => {});
+          // Use upsert with ignoreDuplicates to prevent errors if the badge already exists.
+          await supabase.from('user_badges').upsert(
+            {
+              user_id: profile.id,
+              badge_id: badgeRes.data.id,
+              earned_at: new Date().toISOString()
+            },
+            { onConflict: 'user_id,badge_id', ignoreDuplicates: true }
+          );
         }
 
         await supabase
