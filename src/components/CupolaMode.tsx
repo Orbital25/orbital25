@@ -29,6 +29,17 @@ export function CupolaMode({ onBack }: CupolaModeProps) {
     return () => clearInterval(interval);
   }, []);
 
+  // Effect to animate the EPIC images for a spinning Earth effect
+  useEffect(() => {
+    if (view === 'epic' && epicImages.length > 0) {
+      const epicInterval = setInterval(() => {
+        setCurrentEpicIndex((prevIndex) => (prevIndex + 1) % epicImages.length);
+      }, 2000); // Change image every 2 seconds
+
+      return () => clearInterval(epicInterval);
+    }
+  }, [view, epicImages]);
+
   const loadAPOD = async () => {
     setLoading(true);
     try {
@@ -136,7 +147,8 @@ export function CupolaMode({ onBack }: CupolaModeProps) {
           <img
             src={nasaAPI.getEPICImageUrl(currentImage)}
             alt="Earth from EPIC"
-            className="max-w-3xl w-full rounded-2xl shadow-2xl mb-6"
+            key={currentImage.identifier}
+            className="max-w-3xl w-full rounded-full shadow-2xl mb-6 aspect-square object-cover animate-fade-in"
           />
           <div className="flex gap-2 mb-4">
             {epicImages.map((_, index) => (
