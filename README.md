@@ -7,12 +7,12 @@ Space Academy is an immersive educational platform that allows users to simulate
 
 ##  Key Features
 
-- ** Real-time ISS Tracking**: Interactive map with live ISS position and orbital path visualization
-- ** Cupola Earth View**: Experience Earth observation from the astronaut's perspective using NASA imagery
-- ** NBL Training Simulator**: Interactive Neutral Buoyancy Laboratory spacewalk training simulation
-- ** Mission Dashboard**: Live statistics including altitude, velocity, and orbital information
-- ** Responsive Design**: Optimized for desktop, tablet, and mobile devices
-- ** Real-time Updates**: WebSocket connections for live data streaming
+- **Real-time ISS Tracking**: Interactive map with live ISS position and orbital path visualization
+- **Cupola Earth View**: Experience Earth observation from the astronaut's perspective using NASA imagery
+- **NBL Training Simulator**: Interactive Neutral Buoyancy Laboratory spacewalk training simulation
+- **Mission Dashboard**: Live statistics including altitude, velocity, and orbital information
+- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
+- **Real-time Updates**: WebSocket connections for live data streaming
 
 ##  Tech Stack
 
@@ -110,7 +110,7 @@ We welcome contributions! Please follow these steps:
 5. Open a Pull Request
 
 #
-## Authors
+## Contributors
 
 [STEPHEN OGINGA](https://gitHUB/steodhiambo)
 
