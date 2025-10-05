@@ -398,12 +398,20 @@ function DonkiMessageBody({ text }: { text: string }) {
   return (
     <div className="text-blue-200 text-sm space-y-2">
       {lines.map((line, index) => {
+        if (line.trim() === '##') {
+          return null; // Ignore separator lines
+        }
         if (line.startsWith('## ')) {
           const headerText = line.replace('## ', '').trim();
           if (!headerText) return null; // Don't render empty headers
           return <h4 key={index} className="text-base font-bold text-white pt-2">{headerText}</h4>;
         }
         if (line.startsWith('http')) {
+          if (line.endsWith('.gif')) {
+            return (
+              <img key={index} src={line} alt="DONKI animation" className="rounded-lg my-2 border border-orange-500/30" />
+            );
+          }
           return (
             <a key={index} href={line} target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline block truncate">
               {line}
