@@ -101,10 +101,10 @@ export function NBLMode({ onBack }: NBLModeProps) {
     if (stage === 'lunar' && lunarSamples.length >= 3) {
       (async () => {
         await saveProgress('lunar');
-        await completeTraining();
+        await completeTraining(); // eslint-disable-line react-hooks/exhaustive-deps
       })();
     }
-  }, [lunarSamples, stage, profile]);
+  }, [lunarSamples, stage]);
 
   if (stage === 'intro') {
     return (
