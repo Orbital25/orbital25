@@ -77,8 +77,8 @@ export const nasaAPI = {
     return fetchFromProxy('techport');
   },
 
-  async getTechTransfer() {
-    return fetchFromProxy('techtransfer');
+  async getTechTransfer(type: 'patents' | 'software' | 'spinoff' = 'patents') {
+    return fetchFromProxy('techtransfer', { type });
   }
 };
 
