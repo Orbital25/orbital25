@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Globe, Camera, AlertTriangle, Sun, Loader } from 'lucide-react';
-import { nasaAPI } from '../lib/nasa';
+import { nasaAPI, EPICImage, APODData } from '../lib/nasa';
 
-let epicCache: any[] | null = null;
+let epicCache: EPICImage[] | null = null;
 let eonetCache: EONETEvent[] | null = null;
 
 type CupolaModeProps = {
@@ -18,8 +18,8 @@ type EONETEvent = {
 
 export function CupolaMode({ onBack }: CupolaModeProps) {
   const [view, setView] = useState<'main' | 'apod' | 'epic' | 'eonet'>('main');
-  const [apodData, setApodData] = useState<any>(null);
-  const [epicImages, setEpicImages] = useState<any[]>([]);
+  const [apodData, setApodData] = useState<APODData | null>(null);
+  const [epicImages, setEpicImages] = useState<EPICImage[]>([]);
   const [eonetEvents, setEonetEvents] = useState<EONETEvent[]>([]);
   const [currentEpicIndex, setCurrentEpicIndex] = useState(0);
   const [primaryImageIndex, setPrimaryImageIndex] = useState(0);
