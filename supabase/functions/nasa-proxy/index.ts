@@ -18,7 +18,7 @@ const nasaEndpoints = {
   epic: 'https://epic.gsfc.nasa.gov/api/natural',
   exoplanet: 'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,sy_snum,sy_pnum,discoverymethod,disc_year+from+pscomppars&format=json',
   mars: `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=${NASA_API_KEY}`,
-  techport: `https://api.nasa.gov/techport/api/projects?api_key=${NASA_API_KEY}`,
+  techport: `https://techport.nasa.gov/api/projects?startFundingYear=2025&endFundingYear=2027`,
   techtransfer: {
     patents: 'https://technology.nasa.gov/api/api/patent/',
     software: 'https://technology.nasa.gov/api/api/software/',
