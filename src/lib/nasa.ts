@@ -60,6 +60,11 @@ export const nasaAPI = {
     const response = await fetch(
       `https://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=exoplanets&select=pl_name,pl_masse,pl_rade,st_dist&format=json&order=pl_name`
     );
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Exoplanet API Error:', errorText);
+      throw new Error('Failed to fetch Exoplanet data. The API may be temporarily unavailable.');
+    }
     const data = await response.json();
     return data.slice(0, limit);
   },
