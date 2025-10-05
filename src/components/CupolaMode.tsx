@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Globe, Camera, AlertTriangle, Sun, Sunrise } from 'lucide-react';
+import { ArrowLeft, Globe, Camera, AlertTriangle, Sun, Loader } from 'lucide-react';
 import { nasaAPI } from '../lib/nasa';
 
 let epicCache: any[] | null = null;
@@ -25,7 +25,7 @@ export function CupolaMode({ onBack }: CupolaModeProps) {
   const [primaryImageIndex, setPrimaryImageIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
   const [sunsetPhase, setSunsetPhase] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loadingView, setLoadingView] = useState<'apod' | 'eonet' | null>(null);
   const [initialEpicLoad, setInitialEpicLoad] = useState(true);
 
   useEffect(() => {
@@ -70,7 +70,7 @@ export function CupolaMode({ onBack }: CupolaModeProps) {
   }, [epicImages, currentEpicIndex]);
 
   const loadAPOD = async () => {
-    setLoading(true);
+    setLoadingView('apod');
     try {
       const data = await nasaAPI.getAPOD();
       setApodData(data);
@@ -78,7 +78,7 @@ export function CupolaMode({ onBack }: CupolaModeProps) {
     } catch (error) {
       console.error('Error loading APOD:', error);
     } finally {
-      setLoading(false);
+      setLoadingView(null);
     }
   };
 
@@ -87,7 +87,7 @@ export function CupolaMode({ onBack }: CupolaModeProps) {
   };
 
   const loadEONET = async () => {
-    setLoading(true);
+    setLoadingView('eonet');
     try {
       if (eonetCache) {
         setEonetEvents(eonetCache);
@@ -101,7 +101,7 @@ export function CupolaMode({ onBack }: CupolaModeProps) {
     } catch (error) {
       console.error('Error loading EONET:', error);
     } finally {
-      setLoading(false);
+      setLoadingView(null);
     }
   };
 
@@ -293,17 +293,23 @@ export function CupolaMode({ onBack }: CupolaModeProps) {
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-wrap justify-center gap-4 max-w-4xl px-4">
         <button
           onClick={loadAPOD}
-          disabled={loading}
-          className="flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-lg text-white rounded-lg transition-all border border-white/30 disabled:opacity-50"
+          disabled={!!loadingView}
+          className="flex items-center justify-center gap-2 w-48 px-6 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-lg text-white rounded-lg transition-all border border-white/30 disabled:opacity-50"
         >
-          <Sun className="w-5 h-5" />
-          Astronomy Picture
+          {loadingView === 'apod' ? (
+            <Loader className="w-5 h-5 animate-spin" />
+          ) : (
+            <>
+              <Sun className="w-5 h-5" />
+              Astronomy Picture
+            </>
+          )}
         </button>
 
         <button
           onClick={loadEPIC}
-          disabled={loading}
-          className="flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-lg text-white rounded-lg transition-all border border-white/30 disabled:opacity-50"
+          disabled={!!loadingView}
+          className="flex items-center justify-center gap-2 w-48 px-6 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-lg text-white rounded-lg transition-all border border-white/30 disabled:opacity-50"
         >
           <Camera className="w-5 h-5" />
           Earth Images
@@ -311,11 +317,17 @@ export function CupolaMode({ onBack }: CupolaModeProps) {
 
         <button
           onClick={loadEONET}
-          disabled={loading}
-          className="flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-lg text-white rounded-lg transition-all border border-white/30 disabled:opacity-50"
+          disabled={!!loadingView}
+          className="flex items-center justify-center gap-2 w-48 px-6 py-3 bg-white/10 hover:bg-white/20 backdrop-blur-lg text-white rounded-lg transition-all border border-white/30 disabled:opacity-50"
         >
-          <AlertTriangle className="w-5 h-5" />
-          Global Events
+          {loadingView === 'eonet' ? (
+            <Loader className="w-5 h-5 animate-spin" />
+          ) : (
+            <>
+              <AlertTriangle className="w-5 h-5" />
+              Global Events
+            </>
+          )}
         </button>
       </div>
     </div>
