@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { ArrowLeft, Globe, Camera, AlertTriangle, Sun, Sunrise } from 'lucide-react';
 import { nasaAPI } from '../lib/nasa';
 
+let epicCache: any[] | null = null;
+
 type CupolaModeProps = {
   onBack: () => void;
 };
@@ -56,8 +58,14 @@ export function CupolaMode({ onBack }: CupolaModeProps) {
   const loadEPIC = async () => {
     setLoading(true);
     try {
-      const data = await nasaAPI.getEPIC();
-      setEpicImages(data.slice(0, 10));
+      if (epicCache) {
+        setEpicImages(epicCache);
+      } else {
+        const data = await nasaAPI.getEPIC();
+        const slicedData = data.slice(0, 10);
+        epicCache = slicedData;
+        setEpicImages(slicedData);
+      }
       setView('epic');
     } catch (error) {
       console.error('Error loading EPIC:', error);
